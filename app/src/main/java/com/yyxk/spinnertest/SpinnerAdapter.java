@@ -45,6 +45,7 @@ public class SpinnerAdapter extends BaseAdapter {
     private List<String> list;
     private Context context;
     private Spinner spinner;
+    final ViewHolder holder = new ViewHolder();
     public SpinnerAdapter(List<String> list, Context context,Spinner spinner) {
         this.list = list;
         this.context = context;
@@ -69,14 +70,27 @@ public class SpinnerAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(context).inflate(R.layout.item, parent, false);
-        final ViewHolder holder = new ViewHolder();
+
         holder.textView = (TextView) convertView.findViewById(R.id.text);
 
-        holder.textView.setText("----请选择----");
+        holder.textView.setText("----请选择----");//初始化，类似于hint
+
+        return convertView;
+    }
+	/**
+	* 重写getDropDownView,意味着Spinner下拉时窗口显示内容
+	*
+	*/
+    @Override
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        convertView= LayoutInflater.from(context).inflate(R.layout.item,parent,false);
+
+        holder.textView= (TextView) convertView.findViewById(R.id.text);
+        holder.textView.setText(list.get(position));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                holder.textView.setText(list.get(position));
+                holder.textView.setText(list.get(position));//利用监听器更改Spinner显示选择项
             }
 
             @Override
@@ -84,15 +98,6 @@ public class SpinnerAdapter extends BaseAdapter {
 
             }
         });
-        return convertView;
-    }
-
-    @Override
-    public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        convertView= LayoutInflater.from(context).inflate(R.layout.item,parent,false);
-        ViewHolder holder=new ViewHolder();
-        holder.textView= (TextView) convertView.findViewById(R.id.text);
-        holder.textView.setText(list.get(position));
         return convertView;
     }
     static class ViewHolder{
